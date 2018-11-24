@@ -1,6 +1,9 @@
 # rust_study
 rust_study
+# Webassembly
+https://github.com/appcypher/awesome-wasm-langs
 
+https://github.com/koute/cargo-web
 # Go
 Go语言示例：https://gobyexample.xgwang.me/  
 
@@ -50,5 +53,18 @@ Kotlin资源大全：https://zhuanlan.zhihu.com/p/27000007
 项目中用到的其它语言：
 - nodejs -> socket.io 做的弹幕系统
 - python -> 视频转码，压缩，小工具
+
+# 其它
+rust-client
+
+https://gitlab.com/rakenodiax/rust-client
+
+from-iron-to-actix-web
+
+https://medium.com/meetbitfury/generic-methods-in-rust-how-exonum-shifted-from-iron-to-actix-web-7a2752171388
+
+feature-flags
+
+https://www.worthe-it.co.za/programming/2018/11/18/compile-time-feature-flags-in-rust.html
 
 

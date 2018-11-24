@@ -1,0 +1,6 @@
+[package]
+name = "hellorust"
+version = "0.1.0"
+authors = ["Enter <350840291@qq.com>"]
+
+[dependencies]

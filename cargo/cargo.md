@@ -4,6 +4,9 @@
 
 言而总之，作为rust的代码组织管理工具，cargo提供了一系列的工具，从项目的建立、构建到测试、运行直至部署，为rust项目的管理提供尽可能完整的手段。同时，与rust语言及其编译器rustc本身的各种特性紧密结合，可以说既是语言本身的知心爱人，又是rust猿们的贴心小棉袄，谁用谁知道。
 
+# toml配置文件
+https://github.com/toml-lang/toml
+
 # 创建项目 hellorust
  cargo new hellorust --bin
 # 编译和运行
@@ -21,6 +24,20 @@ cargo run # 编译和运行合在一起
 cargo run --release # 同上，区别是是优化编译的
 
 # 建议项目结构
+```
+.
+├── Cargo.toml
+├── Cargo.lock
+├── tests
+├── examples
+├── benches
+├── target
+    ├── debug
+    └── release
+└── src
+    ├── lib.rs
+    └── main.rs
+```
 
 cargo.toml和cargo.lock文件总是位于项目根目录下。
 

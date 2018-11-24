@@ -1,0 +1,7 @@
+[package]
+name = "hello-world"
+version = "0.1.0"
+authors = ["Enter <350840291@qq.com>"]
+
+[dependencies]
+actix-web = "0.7"

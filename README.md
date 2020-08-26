@@ -30,6 +30,8 @@ Rust程序设计（第一版）：https://kaisery.gitbooks.io/rust-book-chinese/
 
 Rust程序设计（第二版）：https://kaisery.github.io/trpl-zh-cn/
 
+[Rust 程序设计语言（第二版 & 2018 edition） 简体中文版](https://github.com/KaiserY/trpl-zh-cn)
+
 # Kotlin
 Kotlin中文官网：https://www.kotlincn.net/
 

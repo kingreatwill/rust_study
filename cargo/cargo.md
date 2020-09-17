@@ -26,6 +26,22 @@ cargo run --release # 同上，区别是是优化编译的
 cargo test #运行所有的测试
 
 cargo package
+```
+build       编译当前包
+check       检查当前包并寻出错误，但不进行编译
+clean       删除编译结果（即target文件夹）
+doc         构建当前包以及依赖项得文档
+new         新建一个crate
+init        以当前文件夹初始化一个crate
+run         编译并执行src/main.rs
+test        执行测试项
+bench       执行基准测试项
+update      更新所需的依赖项并预编译
+search      搜索crates
+publish     打包发布
+install     安装cargo相关可执行文件，默认路径为 $HOME/.cargo/bin
+uninstall   卸载相关可执行文件
+```
 ## 建议项目结构
 ```
 .
@@ -210,9 +226,125 @@ include = [
 $ cargo publish
 ```
 > 注意语义版本控制 [Semantic Versioning 2.0.0](https://semver.org/)
+## config
+https://doc.rust-lang.org/cargo/reference/config.html
 
 ## Cargo.toml
 [The Manifest Format 清单格式](https://cargo.budshome.com/reference/manifest.html)
+
+## 交叉编译
+查看支持的目标平台
+rustup target list
+```
+aarch64-apple-ios
+aarch64-fuchsia
+aarch64-linux-android
+aarch64-pc-windows-msvc
+aarch64-unknown-linux-gnu
+aarch64-unknown-linux-musl
+aarch64-unknown-none
+aarch64-unknown-none-softfloat
+arm-linux-androideabi
+arm-unknown-linux-gnueabi
+arm-unknown-linux-gnueabihf
+arm-unknown-linux-musleabi
+arm-unknown-linux-musleabihf
+armebv7r-none-eabi
+armebv7r-none-eabihf
+armv5te-unknown-linux-gnueabi
+armv5te-unknown-linux-musleabi
+armv7-linux-androideabi
+armv7-unknown-linux-gnueabi
+armv7-unknown-linux-gnueabihf
+armv7-unknown-linux-musleabi
+armv7-unknown-linux-musleabihf
+armv7a-none-eabi
+armv7r-none-eabi
+armv7r-none-eabihf
+asmjs-unknown-emscripten
+i586-pc-windows-msvc
+i586-unknown-linux-gnu
+i586-unknown-linux-musl
+i686-linux-android
+i686-pc-windows-gnu
+i686-pc-windows-msvc
+i686-unknown-freebsd
+i686-unknown-linux-gnu
+i686-unknown-linux-musl
+mips-unknown-linux-gnu
+mips-unknown-linux-musl
+mips64-unknown-linux-gnuabi64
+mips64-unknown-linux-muslabi64
+mips64el-unknown-linux-gnuabi64
+mips64el-unknown-linux-muslabi64
+mipsel-unknown-linux-gnu
+mipsel-unknown-linux-musl
+nvptx64-nvidia-cuda
+powerpc-unknown-linux-gnu
+powerpc64-unknown-linux-gnu
+powerpc64le-unknown-linux-gnu
+riscv32i-unknown-none-elf
+riscv32imac-unknown-none-elf
+riscv32imc-unknown-none-elf
+riscv64gc-unknown-linux-gnu
+riscv64gc-unknown-none-elf
+riscv64imac-unknown-none-elf
+s390x-unknown-linux-gnu
+sparc64-unknown-linux-gnu
+sparcv9-sun-solaris
+thumbv6m-none-eabi
+thumbv7em-none-eabi
+thumbv7em-none-eabihf
+thumbv7m-none-eabi
+thumbv7neon-linux-androideabi
+thumbv7neon-unknown-linux-gnueabihf
+thumbv8m.base-none-eabi
+thumbv8m.main-none-eabi
+thumbv8m.main-none-eabihf
+wasm32-unknown-emscripten
+wasm32-unknown-unknown
+wasm32-wasi
+x86_64-apple-darwin
+x86_64-apple-ios
+x86_64-fortanix-unknown-sgx
+x86_64-fuchsia
+x86_64-linux-android
+x86_64-pc-windows-gnu
+x86_64-pc-windows-msvc (installed)
+x86_64-rumprun-netbsd
+x86_64-sun-solaris
+x86_64-unknown-cloudabi
+x86_64-unknown-freebsd
+x86_64-unknown-linux-gnu
+x86_64-unknown-linux-gnux32
+x86_64-unknown-linux-musl
+x86_64-unknown-netbsd
+x86_64-unknown-redox
+```
+在~/.cargo/config配置参数
+在该文件的末尾加上下面这条交叉编译工具(linker里面的内容可能不对，这点不熟悉)
+```
+[target.x86_64-unknown-linux-musl]
+linker = "x86_64-linux-musl-gcc"
+```
+安装在config配置的target.x86_64-unknown-linux-musl工具
+```
+$ rustup target add x86_64-unknown-linux-musl
+```
+准备源代码进行交叉编译
+```
+$ cargo build --target=x86_64-unknown-linux-musl
+```
+若是想要省略该参数则需要对config作如下的修改，以改变默认的构建目标
+```
+[build]
+target = "x86_64-unknown-linux-musl"
+```
+另外，也可以给build --target x86_64-unknown-linux-musl 命令设置别名从而缩短构建命令。比如按下面的方式修改config文件后，就可以使用cargo build_linux来构建程序了
+```
+[alias]
+build_linux = "build --target x86_64-unknown-linux-musl"
+```
 
 ## 常见问题
 - Blocking waiting for file lock on package cache

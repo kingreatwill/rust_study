@@ -4,12 +4,12 @@
 
 言而总之，作为rust的代码组织管理工具，cargo提供了一系列的工具，从项目的建立、构建到测试、运行直至部署，为rust项目的管理提供尽可能完整的手段。同时，与rust语言及其编译器rustc本身的各种特性紧密结合，可以说既是语言本身的知心爱人，又是rust猿们的贴心小棉袄，谁用谁知道。
 
-# toml配置文件
+## toml配置文件
 https://github.com/toml-lang/toml
 
-# 创建项目 hellorust
+## 创建项目 hellorust
  cargo new hellorust --bin
-# 编译和运行
+## 编译和运行
 
 cargo build
 
@@ -23,7 +23,10 @@ cargo run # 编译和运行合在一起
 
 cargo run --release # 同上，区别是是优化编译的
 
-# 建议项目结构
+cargo test #运行所有的测试
+
+cargo package
+## 建议项目结构
 ```
 .
 ├── Cargo.toml
@@ -55,7 +58,46 @@ cargo.toml和cargo.lock文件总是位于项目根目录下。
 
 基准测试源代码文件位于benches目录下。
 
-# 定义项目依赖
+```
+.
+├── Cargo.lock
+├── Cargo.toml
+├── src/
+│   ├── lib.rs
+│   ├── main.rs
+│   └── bin/
+│       ├── named-executable.rs
+│       ├── another-executable.rs
+│       └── multi-file-executable/
+│           ├── main.rs
+│           └── some_module.rs
+├── benches/
+│   ├── large-input.rs
+│   └── multi-file-bench/
+│       ├── main.rs
+│       └── bench_module.rs
+├── examples/
+│   ├── simple.rs
+│   └── multi-file-example/
+│       ├── main.rs
+│       └── ex_module.rs
+└── tests/
+    ├── some-integration-tests.rs
+    └── multi-file-test/
+        ├── main.rs
+        └── test_module.rs
+```
+- Cargo.toml and Cargo.lock are stored in the root of your package (package root).
+- Source code goes in the src directory.
+- The default library file is src/lib.rs.
+- The default executable file is src/main.rs.
+    - Other executables can be placed in src/bin/.
+- Benchmarks go in the benches directory.
+- Examples go in the examples directory.
+- Integration tests go in the tests directory.
+
+
+## 定义项目依赖
 
 基于rust官方仓库crates.io，通过版本说明来描述：
 
@@ -70,3 +112,108 @@ hammer = { version = "0.5.0"}
 color = { git = "https://github.com/bjz/color-rs" }
 geometry = { path = "crates/geometry" }
 ````
+
+## cargo镜像
+在用户目录.cargo文件夹或在与Cargo.toml同级目录.cargo文件夹下创建config文件
+
+```
+[source.crates-io]
+registry = "https://github.com/rust-lang/crates.io-index"
+# 指定镜像
+replace-with = 'sjtu'
+
+# 清华大学
+[source.tuna]
+registry = "https://mirrors.tuna.tsinghua.edu.cn/git/crates.io-index.git"
+
+# 中国科学技术大学
+[source.ustc]
+registry = "git://mirrors.ustc.edu.cn/crates.io-index"
+
+# 上海交通大学
+[source.sjtu]
+registry = "https://mirrors.sjtug.sjtu.edu.cn/git/crates.io-index"
+
+# rustcc社区
+[source.rustcc]
+registry = "https://code.aliyun.com/rustcc/crates.io-index.git"
+```
+
+Cargo 支持用另一个来源更换一个来源的能力，可根据镜像或 vendoring 依赖关系来表达倾向。要配置这些，目前通过.cargo/config配置机制完成，像这样:
+```
+# `source` 表下，就是存储有关要更换的来源名称
+[source]
+
+# 在`source` 表格之下的，可为一定数量的有关来源名称. 示例下面就# 定义了一个新源， 叫 `my-awesome-source`， 其内容来自本地 # `vendor`目录 ，其相对于包含`.cargo/config`文件的目录
+[source.my-awesome-source]
+directory = "vendor"
+
+# Git sources 也指定一个 branch/tag/rev
+git = "https://example.com/path/to/repo"
+# branch = "master"
+# tag = "v1.0.1"
+# rev = "313f44e8"
+
+# The crates.io 默认源 在"crates-io"名称下， 且在这里我们使用 `replace-with` 字段指明 默认源更换成"my-awesome-source"源
+[source.crates-io]
+replace-with = "my-awesome-source"
+```
+
+使用此配置，Cargo 会尝试在"vendor"目录中，查找所有包，而不是 查询在线注册表 crates.io 。Cargo 有两种来源更换的表达 :
+
+- 供应(Vendoring) - 可以定义自定义源，它们表示本地文件系统上的包。这些源是它们正在更换的源的子集，并在需要时可以检入包中。
+
+- 镜像(Mirroring) - 可以更换为等效版本的源，行为表现为 `crates.io` 本身的缓存。
+
+Cargo 有一个关于来源更换的核心假设，源代码从两个完全相同的源而来。在上面的例子中，Cargo 假设所有的箱子都来自my-awesome-source，与crates-io副本完全相同。请注意，这也意味着my-awesome-source，不允许有crates-io源不存在的箱。
+
+因此，来源更换不适用于依赖项补丁(fix bug)，或私有注册表等情况。Cargo 是通过使用[replace]字段支持依赖项补丁，计划为未来版本的 Cargo 提供私人注册表的支持。
+
+## 发布到 crates.io
+
+进入：https://crates.io/me
+
+点击：New Token
+cmd: cargo login (token)
+查看：~/.cargo/credentials
+
+我们将使用cargo package子命令。这将把我们的整个包装箱全部打包成一个*.crate文件，其在target/package目录中。
+```
+$ cargo package
+```
+作为一个额外的功能，`*.crate`将独立于当前源树进行验证。在`*.crate`创建之后，会解压到target/package目录，然后从头开始构建，以确保构建成功的所有必要文件。可以使用`--no-verify`参数禁用此行为。
+
+现在是时候看看`*.crate`文件了，为了确保您不会意外地打包 2GB 视频资源，或用于代码生成，集成测试或基准测试的大型数据文件。目前存在 10MB 的`*.crate`文件上传大小限制。所以，如果tests和benches目录及其依赖项大小，最多只达 几 MB，您仍可以将它们保存在包; 不然的话，最好排除它们。
+
+在打包时，Cargo 会自动忽略版本控制系统的忽略文件，但是如果要指定要额外的忽略文件集，则可以使用清单中的exclude字段:
+
+```
+[package]
+# ...
+exclude = [
+    "public/assets/*",
+    "videos/*",
+]
+```
+
+这个数组中每个元素接受的语法是[rust-lang/glob](https://github.com/rust-lang/glob)。如果您宁愿使用白名单，而不是黑名单,Cargo 也支持include字段，如果设置,则会覆盖exclude字段:
+```
+[package]
+# ...
+include = [
+    "**/*.rs",
+    "Cargo.toml",
+]
+```
+上传(也可以跳过cargo package)
+```
+$ cargo publish
+```
+> 注意语义版本控制 [Semantic Versioning 2.0.0](https://semver.org/)
+
+## Cargo.toml
+[The Manifest Format 清单格式](https://cargo.budshome.com/reference/manifest.html)
+
+## 常见问题
+- Blocking waiting for file lock on package cache
+    - 删~/.cargo/.package-cache文件(rm -rf ~/.cargo/.package-cache)

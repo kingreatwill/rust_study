@@ -1,4 +1,4 @@
-extern crate regex;
+extern crate regex;// Rust 2015
 use regex::Regex;
 
 fn main() {

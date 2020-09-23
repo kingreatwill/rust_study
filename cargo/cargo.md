@@ -112,6 +112,23 @@ cargo.toml和cargo.lock文件总是位于项目根目录下。
 - Examples go in the examples directory.
 - Integration tests go in the tests directory.
 
+```
+// https://doc.rust-lang.org/edition-guide/rust-2018/module-system/path-clarity.html#no-more-modrs
+Rust 2015	        
+.
+├── lib.rs
+└── foo/
+    ├── mod.rs
+    └── bar.rs
+
+Rust 2018
+.
+├── lib.rs
+├── foo.rs
+└── foo/
+    └── bar.rs
+
+```
 
 ## 定义项目依赖
 

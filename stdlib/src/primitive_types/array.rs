@@ -19,4 +19,10 @@ pub fn array_demo() {
 }
 
 
-
+#[test]
+fn test_patterns() {
+    let mut array: [i32; 3] = [0; 3];
+    println!("{}", array.len());
+    println!("{:?}", array.sort());
+    
+}

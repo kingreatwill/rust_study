@@ -384,6 +384,8 @@ https://rustcc.cn/article?id=fcb2900b-339a-45a9-bb53-88301d7f34ed
 `cross build --target aarch64-unknown-linux-gnu`
 `cross build --target=x86_64-unknown-linux-musl`
 
+### 交叉编译指南
+https://github.com/japaric/rust-cross
 
 ## 常见问题
 - Blocking waiting for file lock on package cache

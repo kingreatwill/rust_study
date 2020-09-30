@@ -31,6 +31,7 @@ tokio = { version = "0.2", features = ["macros"] }
 warp = "0.2"
 xml-rs = "0.8"
 url = "2"
+anyhow = "1.0"
 
 [build-dependencies]
 ructe = { version = "0.12", features = ["warp02"] }
